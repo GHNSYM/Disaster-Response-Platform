@@ -419,7 +419,7 @@
             if (verificationSection) {
                 verificationSection.style.display = 'block';
             }
-            
+
             return card;
         }
 
@@ -458,12 +458,12 @@
                 const postElement = document.createElement('div');
                 postElement.className = `card mb-2 ${post.is_priority ? 'border-danger' : ''}`;
                 postElement.innerHTML = `
-                    <div class="card-body">
+                        <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start">
                             <h6 class="card-subtitle mb-2 text-muted">${post.platform} - ${post.username}</h6>
                             <small class="text-muted">${new Date(post.timestamp).toLocaleString()}</small>
                         </div>
-                        <p class="card-text">${post.content}</p>
+                            <p class="card-text">${post.content}</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <small class="text-muted">${post.location}</small>
                             ${post.is_priority ? '<span class="badge bg-danger">Priority Alert</span>' : ''}
@@ -494,7 +494,7 @@
                 disastersList.innerHTML = ''; // Clear loading message
                 if (disasters.length === 0) {
                     disastersList.innerHTML = '<div class="text-center"><p class="text-muted">No active disasters</p></div>';
-                } else {
+            } else {
                     disasters.forEach(disaster => appendDisaster(disaster));
                 }
             } catch (error) {
@@ -574,7 +574,13 @@
                     throw new Error('Please enter an image URL first');
                 }
 
-                const response = await fetch(`/disasters/${disasterId}/verify-image`, {
+                // Show loading state
+                const verifyButton = imageUrlInput.nextElementSibling;
+                const spinner = verifyButton.querySelector('.spinner-border');
+                verifyButton.disabled = true;
+                spinner.classList.remove('d-none');
+
+                const response = await fetch(`/api/verify/${disasterId}/verify-image`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -631,6 +637,12 @@
             } catch (error) {
                 console.error('Error verifying image:', error);
                 alert(error.message || 'Failed to verify image. Please try again.');
+            } finally {
+                // Reset button state
+                const verifyButton = imageUrlInput.nextElementSibling;
+                const spinner = verifyButton.querySelector('.spinner-border');
+                verifyButton.disabled = false;
+                spinner.classList.add('d-none');
             }
         }
     </script>

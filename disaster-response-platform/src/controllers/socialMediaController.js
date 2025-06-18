@@ -7,7 +7,7 @@ const logger = require('../config/logger');
  * @param {Object} res - Express response object
  */
 async function getFeed(req, res) {
-    try {
+  try {
         const { disaster_id } = req.params;
         const { title } = req.query;
 
@@ -34,13 +34,13 @@ async function getFeed(req, res) {
         });
 
         res.json(formattedFeed);
-    } catch (error) {
+  } catch (error) {
         logger.error('Error getting social media feed:', error);
         res.status(500).json({ 
             error: 'Failed to get social media feed',
             message: error.message
         });
-    }
+  }
 }
 
 module.exports = {

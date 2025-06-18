@@ -73,7 +73,8 @@ app.use((req, res, next) => {
 app.use('/disasters', disasterRoutes);
 app.use('/disasters', socialMediaRoutes);
 app.use('/disasters', resourceRoutes);
-app.use('/', verificationRoutes);
+// app.use('/', verificationRoutes);
+app.use('/api/verify', verificationRoutes);
 
 // Serve static files
 app.use(express.static(path.join(__dirname, '../public')));

@@ -7,13 +7,13 @@ const logger = require('../config/logger');
  * @param {Object} res - Express response object
  */
 async function verifyImage(req, res) {
-    try {
+  try {
         const { id: disasterId } = req.params;
-        const { imageUrl } = req.body;
+    const { imageUrl } = req.body;
 
-        if (!imageUrl) {
-            return res.status(400).json({ error: 'Image URL is required' });
-        }
+    if (!imageUrl) {
+      return res.status(400).json({ error: 'Image URL is required' });
+    }
 
         const result = await verifyDisasterImage(imageUrl, disasterId);
 
@@ -23,13 +23,13 @@ async function verifyImage(req, res) {
         });
 
         res.json(result);
-    } catch (error) {
+  } catch (error) {
         logger.error('Error verifying image:', error);
         res.status(500).json({ 
             error: 'Failed to verify image',
             message: error.message
         });
-    }
+  }
 }
 
 module.exports = {

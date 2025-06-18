@@ -27,7 +27,7 @@ async function getSocialMediaFeed(disasterId, title) {
             return cachedFeed;
         }
 
-        // Generate mock posts
+    // Generate mock posts
         const posts = [
             {
                 id: 'mock_1',
@@ -69,11 +69,11 @@ async function getSocialMediaFeed(disasterId, title) {
         // Cache results
         await cacheService.set(cacheKey, posts, CACHE_TTL);
 
-        return posts;
-    } catch (error) {
+    return posts;
+  } catch (error) {
         logger.error('Error getting social media feed:', error);
-        throw error;
-    }
+    throw error;
+  }
 }
 
 module.exports = {
