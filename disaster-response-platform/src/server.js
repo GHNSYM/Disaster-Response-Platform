@@ -15,6 +15,7 @@ const disasterRoutes = require('./routes/disasterRoutes');
 const socialMediaRoutes = require('./routes/socialMediaRoutes');
 const resourceRoutes = require('./routes/resourceRoutes');
 const verificationRoutes = require('./routes/verificationRoutes');
+const officialUpdatesRoutes = require('./routes/officialUpdatesRoutes');
 
 // Create Express app
 const app = express();
@@ -77,6 +78,7 @@ app.use('/api/disasters', disasterRoutes);
 app.use('/disasters', socialMediaRoutes);
 app.use('/disasters', resourceRoutes);
 app.use('/api/verify', verificationRoutes);
+app.use('/api/official-updates', officialUpdatesRoutes);
 
 // Serve static files
 app.use(express.static(path.join(__dirname, '../public')));

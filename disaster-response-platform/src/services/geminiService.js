@@ -58,7 +58,7 @@ Description: ${description}`;
  */
 async function verifyImage(imageUrl, disasterContext) {
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
         // Construct the prompt
         const prompt = `Analyze this image in the context of a disaster situation: ${disasterContext}

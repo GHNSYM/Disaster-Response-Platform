@@ -141,65 +141,80 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="mb-4 text-center">Disaster Response Platform</h1>
+        <div class="row">
+            <div class="col-lg-8">
+                <h1 class="mb-4 text-center">Disaster Response Platform</h1>
 
-        <!-- Create Disaster Form -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="card-title mb-0">Create New Disaster</h5>
-            </div>
-            <div class="card-body">
-                <form id="createDisasterForm">
-                    <div class="mb-3">
-                        <label for="title" class="form-label">Title</label>
-                        <input type="text" class="form-control" id="title" required>
+                <!-- Create Disaster Form -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Create New Disaster</h5>
                     </div>
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea class="form-control" id="description" rows="3" required></textarea>
+                    <div class="card-body">
+                        <form id="createDisasterForm">
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Title</label>
+                                <input type="text" class="form-control" id="title" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control" id="description" rows="3" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="tags" class="form-label">Tags (comma-separated)</label>
+                                <input type="text" class="form-control" id="tags" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="createDisasterBtn">
+                                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true" id="createDisasterSpinner"></span>
+                                <span id="createDisasterBtnText">Create Disaster</span>
+                            </button>
+                        </form>
                     </div>
-                    <div class="mb-3">
-                        <label for="tags" class="form-label">Tags (comma-separated)</label>
-                        <input type="text" class="form-control" id="tags" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary" id="createDisasterBtn">
-                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true" id="createDisasterSpinner"></span>
-                        <span id="createDisasterBtnText">Create Disaster</span>
-                    </button>
-                </form>
-            </div>
-        </div>
+                </div>
 
-        <!-- Disasters List -->
-        <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0">Active Disasters</h5>
-                <div class="spinner-border spinner-border-sm text-primary d-none" role="status" id="loadingDisastersSpinner">
-                    <span class="visually-hidden">Loading...</span>
+                <!-- Disasters List -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Active Disasters</h5>
+                        <div class="spinner-border spinner-border-sm text-primary d-none" role="status" id="loadingDisastersSpinner">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="disastersList"></div>
+                    </div>
+                </div>
+
+                <!-- Social Media Feed -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Social Media Feed</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="socialMediaFeed"></div>
+                    </div>
+                </div>
+
+                <!-- Resources Map -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Resources Map</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="map"></div>
+                    </div>
                 </div>
             </div>
-            <div class="card-body">
-                <div id="disastersList"></div>
-            </div>
-        </div>
-
-        <!-- Social Media Feed -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="card-title mb-0">Social Media Feed</h5>
-            </div>
-            <div class="card-body">
-                <div id="socialMediaFeed"></div>
-            </div>
-        </div>
-
-        <!-- Resources Map -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="card-title mb-0">Resources Map</h5>
-            </div>
-            <div class="card-body">
-                <div id="map"></div>
+            <div class="col-lg-4">
+                <!-- Official Updates Card -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Official Updates (NDMA India)</h5>
+                    </div>
+                    <div class="card-body" id="officialUpdates">
+                        <div class="text-center text-muted">Loading official updates...</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -494,7 +509,7 @@
                 disastersList.innerHTML = ''; // Clear loading message
                 if (disasters.length === 0) {
                     disastersList.innerHTML = '<div class="text-center"><p class="text-muted">No active disasters</p></div>';
-            } else {
+                } else {
                     disasters.forEach(disaster => appendDisaster(disaster));
                 }
             } catch (error) {
@@ -568,8 +583,9 @@
         }
 
         async function verifyImage(disasterId) {
+            let imageUrlInput;
             try {
-                const imageUrlInput = document.getElementById(`imageUrl-${disasterId}`);
+                imageUrlInput = document.getElementById(`imageUrl-${disasterId}`);
                 if (!imageUrlInput || !imageUrlInput.value) {
                     throw new Error('Please enter an image URL first');
                 }
@@ -638,13 +654,37 @@
                 console.error('Error verifying image:', error);
                 alert(error.message || 'Failed to verify image. Please try again.');
             } finally {
-                // Reset button state
-                const verifyButton = imageUrlInput.nextElementSibling;
-                const spinner = verifyButton.querySelector('.spinner-border');
-                verifyButton.disabled = false;
-                spinner.classList.add('d-none');
+                if (imageUrlInput) {
+                    const verifyButton = imageUrlInput.nextElementSibling;
+                    const spinner = verifyButton.querySelector('.spinner-border');
+                    verifyButton.disabled = false;
+                    spinner.classList.add('d-none');
+                }
             }
         }
+
+        async function loadOfficialUpdates() {
+            try {
+                const res = await fetch('/api/official-updates');
+                const updates = await res.json();
+                const container = document.getElementById('officialUpdates');
+                if (!updates.length) {
+                    container.innerHTML = '<div class="text-muted">No official updates available.</div>';
+                    return;
+                }
+                container.innerHTML = updates.map(u => `
+                    <div class="mb-3">
+                        <div><span style="font-size:1.2em;">${u.icon}</span> <a href="${u.link}" target="_blank"><strong>${u.title}</strong></a></div>
+                        <div><small class="text-muted">${u.source} &middot; ${new Date(u.date).toLocaleString()}</small></div>
+                        <div class="text-muted" style="font-size:0.95em;">${u.summary}</div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                document.getElementById('officialUpdates').innerHTML = '<div class="text-danger">Failed to load official updates.</div>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadOfficialUpdates);
     </script>
 </body>
 </html> 

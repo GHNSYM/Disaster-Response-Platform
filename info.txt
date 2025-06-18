@@ -1,0 +1,39 @@
+🚨 Disaster Response Platform: Feature Overview
+Key Features
+Disaster Creation & Management
+Users can create new disaster events by entering a title, description, and tags.
+The system automatically extracts the location from the description using AI, geocodes it, and stores it as a spatial point in the database.
+All disasters are listed with real-time updates via Socket.IO.
+Resource Mapping
+For each disaster, users can view nearby resources (shelters, medical, food, etc.) on an interactive OpenStreetMap-based map.
+Social Media Feed
+Aggregates and displays relevant social media posts for each disaster, providing situational awareness.
+Image Verification
+Users can submit image URLs for AI-powered verification, checking authenticity and relevance to the disaster context.
+Official Updates Aggregation
+A dedicated side card fetches and displays the latest official updates from:
+NDMA India
+Modern, Responsive UI
+Built with Bootstrap 5 and Leaflet for a clean, mobile-friendly experience.
+⚡ How Cursor AI Accelerated Development
+Rapid API Prototyping: Used Cursor AI to quickly scaffold and refactor Express.js controllers, services, and routes for disaster, resource, and verification management.
+AI-Powered Integration: Leveraged Cursor AI to integrate and debug third-party APIs (e.g., Google Gemini, Supabase, RSS feeds) and to automate repetitive code tasks.
+Error Handling & Debugging: Used Cursor AI’s code search and context tools to instantly trace and fix bugs, optimize database schema usage, and ensure robust error handling.
+Frontend-Backend Sync: Cursor AI helped align frontend fetch calls and backend route registration, ensuring seamless data flow and real-time updates.
+Result: Built a scalable, full-stack disaster response platform with advanced features in a fraction of the usual development time.
+🌐 Third-Party APIs & Services Used
+Supabase
+Managed database (PostgreSQL with PostGIS)
+Google Gemini (Generative AI)
+For extracting locations from disaster descriptions and verifying images.
+OpenStreetMap & Leaflet
+For interactive mapping and resource visualization.
+RSS Feeds
+NDMA India: Sachet NDMA RSS
+Socket.IO
+
+APIs Using Mock Data
+1. Social Media Feed
+Source: Mock data (not real social media APIs).
+Details: The social media feed for each disaster is generated using hardcoded or simulated posts. No actual integration with Twitter, Facebook, or Bluesky is active by default.
+Purpose: Provides example posts for demo and UI purposes, ensuring the feature works even without real API keys or rate limits.

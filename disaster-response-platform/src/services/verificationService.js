@@ -1,4 +1,5 @@
 const logger = require('../config/logger');
+const { verifyImage } = require('./geminiService');
 
 /**
  * Verify a disaster image
@@ -8,31 +9,20 @@ const logger = require('../config/logger');
  */
 async function verifyDisasterImage(imageUrl, disasterId) {
     try {
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        // Mock verification logic
-        const isVerified = Math.random() > 0.3; // 70% chance of verification
-        const confidence = Math.random() * 0.3 + 0.7; // Random confidence between 0.7 and 1.0
-
-        const result = {
-            is_verified: isVerified,
-            confidence: confidence,
+        // Use Gemini API for real image verification
+        const geminiResult = await verifyImage(imageUrl, disasterId);
+        // Map Gemini result to expected frontend structure
+        return {
+            is_verified: geminiResult.isAuthentic && geminiResult.matchesContext,
+            confidence: geminiResult.analysis ? 0.9 : 0.5, // Placeholder, Gemini does not return confidence
             details: {
-                disaster_type: isVerified ? 'Natural Disaster' : 'Unverified',
-                severity: isVerified ? 'High' : 'Unknown',
-                location_verified: isVerified,
-                timestamp_verified: isVerified
-            }
+                disaster_type: geminiResult.matchesContext ? 'Natural Disaster' : 'Unverified',
+                severity: geminiResult.severity || 'Unknown',
+                location_verified: geminiResult.matchesContext,
+                timestamp_verified: true // Not available, so default to true
+            },
+            analysis: geminiResult.analysis
         };
-
-        logger.info('Image verification completed', {
-            disasterId,
-            isVerified,
-            confidence
-        });
-
-        return result;
     } catch (error) {
         logger.error('Error verifying image:', error);
         throw error;
