@@ -1,6 +1,8 @@
 const { supabase } = require('../config/database');
 const { getIO } = require('../services/socketService');
 const logger = require('../config/logger');
+const { extractLocation } = require('../services/geminiService');
+const { geocodeLocation } = require('../services/geocodingService');
 
 /**
  * Create a new disaster
@@ -9,23 +11,56 @@ const logger = require('../config/logger');
  */
 async function createDisaster(req, res) {
     try {
-        const { title, description, location_name, latitude, longitude, severity } = req.body;
+        const { title, description, tags, owner_id } = req.body;
 
         // Validate required fields
-        if (!title || !location_name) {
-            return res.status(400).json({ error: 'Title and location are required' });
+        if (!title || !description) {
+            return res.status(400).json({ error: 'Title and description are required' });
         }
+
+        // Extract location name from description
+        let location_name = null;
+        let location = null;
+        let lat = null;
+        let lng = null;
+        try {
+            location_name = await extractLocation(description);
+            if (location_name) {
+                // Geocode the extracted location name
+                const geo = await geocodeLocation(location_name);
+                if (geo) {
+                    lat = geo.lat;
+                    lng = geo.lng;
+                    location_name = geo.formatted_address || location_name;
+                    // Format as WKT for geography column (PostGIS)
+                    location = `SRID=4326;POINT(${lng} ${lat})`;
+                }
+            }
+        } catch (err) {
+            logger.error('Location extraction/geocoding failed:', err);
+        }
+
+        // Prepare audit trail
+        const audit_trail = [
+            {
+                action: 'created',
+                timestamp: new Date().toISOString(),
+                user: owner_id || 'system'
+            }
+        ];
 
         // Insert disaster into database
         const { data, error } = await supabase
             .from('disasters')
             .insert([{
                 title,
-                description,
                 location_name,
-                latitude,
-                longitude,
-                severity: severity || 'medium'
+                location,
+                description,
+                tags,
+                owner_id: owner_id || 'system',
+                created_at: new Date().toISOString(),
+                audit_trail
             }])
             .select()
             .single();

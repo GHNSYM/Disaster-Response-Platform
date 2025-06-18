@@ -36,7 +36,8 @@ app.use(helmet({
                 "'self'",
                 "'unsafe-inline'",
                 'https://cdn.jsdelivr.net',
-                'https://unpkg.com'
+                'https://unpkg.com',
+                'https://fonts.googleapis.com'
             ],
             imgSrc: [
                 "'self'",
@@ -51,7 +52,8 @@ app.use(helmet({
             fontSrc: [
                 "'self'",
                 'https://cdn.jsdelivr.net',
-                'https://unpkg.com'
+                'https://unpkg.com',
+                'https://fonts.gstatic.com'
             ]
         }
     }
@@ -71,9 +73,9 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/disasters', disasterRoutes);
+app.use('/api/disasters', disasterRoutes);
 app.use('/disasters', socialMediaRoutes);
 app.use('/disasters', resourceRoutes);
-// app.use('/', verificationRoutes);
 app.use('/api/verify', verificationRoutes);
 
 // Serve static files
